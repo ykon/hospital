@@ -1,0 +1,263 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.hospital.grpc";
+
+package hospital;
+
+import "google/type/date.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service Hospital {
+
+  // 病室作成
+  rpc CreateRoom(CreateRoomRequest) returns (CreateRoomResponse) {}
+  // 病室更新
+  rpc UpdateRoom(UpdateRoomRequest) returns (google.protobuf.Empty) {}
+  // 病室削除
+  rpc DeleteRoom(DeleteRoomRequest) returns (google.protobuf.Empty) {}
+  // 病室取得
+  rpc GetRooms(GetRoomsRequest) returns (GetRoomsResponse) {}
+
+  // 患者作成
+  rpc CreatePatient(CreatePatientRequest) returns (CreatePatientResponse) {}
+  // 患者更新
+  rpc UpdatePatient(UpdatePatientRequest) returns (google.protobuf.Empty) {}
+  // 患者削除
+  rpc DeletePatient(DeletePatientRequest) returns (google.protobuf.Empty) {}
+  // 患者習得
+  rpc GetPatients(GetPatientsRequest) returns (GetPatientsResponse) {}
+
+  // 入院作成
+  rpc CreateAdmission(CreateAdmissionRequest) returns (CreateAdmissionResponse) {}
+  // 入院更新
+  rpc UpdateAdmission(UpdateAdmissionRequest) returns (google.protobuf.Empty) {}
+  // 入院削除
+  rpc DeleteAdmission(DeleteAdmissionRequest) returns (google.protobuf.Empty) {}
+  // 入院取得
+  rpc GetAdmissions(GetAdmissionsRequest) returns (GetAdmissionsResponse) {}
+
+  // 外出作成
+  rpc CreateRoomOutside(CreateRoomOutsideRequest) returns (CreateRoomOutsideResponse) {}
+  // 外出更新
+  rpc UpdateRoomOutside(UpdateRoomOutsideRequest) returns (google.protobuf.Empty) {}
+  // 外出削除
+  rpc DeleteRoomOutside(DeleteRoomOutsideRequest) returns (google.protobuf.Empty) {}
+  // 外出取得
+  rpc GetRoomOutsides(GetRoomOutsidesRequest) returns (GetRoomOutsidesResponse) {}
+
+  // 移動作成
+  rpc CreateRoomMove(CreateRoomMoveRequest) returns (CreateRoomMoveResponse) {}
+  // 移動更新
+  rpc UpdateRoomMove(UpdateRoomMoveRequest) returns (google.protobuf.Empty) {}
+  // 移動削除
+  rpc DeleteRoomMove(DeleteRoomMoveRequest) returns (google.protobuf.Empty) {}
+  // 移動取得
+  rpc GetRoomMoves(GetRoomMovesRequest) returns (GetRoomMovesResponse) {}
+
+  // 病室期間取得
+  rpc GetRoomDurations(GetRoomDurationsRequest) returns (GetRoomDurationsResponse) {}
+}
+
+message CreateRoomRequest {
+  string number = 1;
+}
+
+message CreateRoomResponse {
+  int32 id = 1;
+}
+
+message UpdateRoomRequest {
+  int32 id = 1;
+  string number = 2;
+  google.protobuf.Timestamp updated_time = 3;
+}
+
+message DeleteRoomRequest {
+  int32 id = 1;
+  google.protobuf.Timestamp updated_time = 2;
+}
+
+message GetRoomsRequest {
+}
+
+message Room {
+  int32 id = 1;
+  string number = 2;
+  google.protobuf.Timestamp updated_time = 3;
+  google.protobuf.Timestamp created_time = 4;
+}
+
+message GetRoomsResponse {
+  repeated Room rooms = 1;
+}
+
+message CreatePatientRequest {
+  string name = 1;
+}
+
+message CreatePatientResponse {
+  int32 id = 1;
+}
+
+message UpdatePatientRequest {
+  int32 id = 1;
+  string name = 2;
+  google.protobuf.Timestamp updated_time = 3;
+}
+
+message DeletePatientRequest {
+  int32 id = 1;
+  google.protobuf.Timestamp updated_time = 2;
+}
+
+message GetPatientsRequest {
+}
+
+message Patient {
+  int32 id = 1;
+  string name = 2;
+  google.protobuf.Timestamp updated_time = 3;
+  google.protobuf.Timestamp created_time = 4;
+}
+
+message GetPatientsResponse {
+  repeated Patient patients = 1;
+}
+
+message CreateAdmissionRequest {
+  int32 patient_id = 1;
+  int32 room_id = 2;
+  google.type.Date start_date = 3;
+  optional google.type.Date end_date = 4;
+}
+
+message CreateAdmissionResponse {
+  int32 id = 1;
+}
+
+message UpdateAdmissionRequest {
+  int32 id = 1;
+  optional google.type.Date start_date = 2;
+  optional google.type.Date end_date = 3;
+  google.protobuf.Timestamp updated_time = 4;
+}
+
+message DeleteAdmissionRequest {
+  int32 id = 1;
+  google.protobuf.Timestamp updated_time = 2;
+}
+
+message GetAdmissionsRequest {
+  int32 patient_id = 1;
+}
+
+message Admission {
+  int32 id = 1;
+  int32 patient_id = 2;
+  int32 room_id = 3;
+  google.type.Date start_date = 4;
+  google.type.Date end_date = 5;
+  google.protobuf.Timestamp updated_time = 6;
+  google.protobuf.Timestamp created_time = 7;
+}
+
+message GetAdmissionsResponse {
+  repeated Admission admissions = 1;
+}
+
+message CreateRoomOutsideRequest {
+  int32 admission_id = 1;
+  google.type.Date start_date = 2;
+  google.type.Date end_date = 3;
+  google.protobuf.Timestamp updated_time = 4;
+}
+
+message CreateRoomOutsideResponse {
+  int32 id = 1;
+}
+
+message UpdateRoomOutsideRequest {
+  int32 id = 1;
+  google.type.Date start_date = 2;
+  google.type.Date end_date = 3;
+  google.protobuf.Timestamp updated_time = 4;
+}
+
+message DeleteRoomOutsideRequest {
+  int32 id = 1;
+  google.protobuf.Timestamp updated_time = 2;
+}
+
+message RoomOutside {
+  int32 id = 1;
+  google.type.Date start_date = 2;
+  google.type.Date end_date = 3;
+  google.protobuf.Timestamp updated_time = 4;
+  google.protobuf.Timestamp created_time = 5;
+}
+
+message GetRoomOutsidesRequest {
+  int32 admission_id = 1;
+}
+
+message GetRoomOutsidesResponse {
+  repeated RoomOutside room_outsides = 1;
+}
+
+message CreateRoomMoveRequest {
+  int32 admission_id = 1;
+  int32 from_room_id = 2;
+  int32 to_room_id = 3;
+  google.type.Date move_date = 4;
+}
+
+message CreateRoomMoveResponse {
+  int32 id = 1;
+}
+
+message UpdateRoomMoveRequest {
+  int32 id = 1;
+  int32 from_room_id = 2;
+  int32 to_room_id = 3;
+  google.type.Date move_date = 4;
+  google.protobuf.Timestamp updated_time = 5;
+}
+
+message DeleteRoomMoveRequest {
+  int32 id = 1;
+  google.protobuf.Timestamp updated_time = 2;
+}
+
+message GetRoomMovesRequest {
+  int32 admission_id = 1;
+}
+
+message RoomMove {
+  int32 id = 1;
+  int32 admission_id = 2;
+  int32 from_room_id = 3;
+  int32 to_room_id = 4;
+  google.type.Date move_date = 5;
+  google.protobuf.Timestamp updated_time = 6;
+  google.protobuf.Timestamp created_time = 7;
+}
+
+message GetRoomMovesResponse {
+  repeated RoomMove room_moves = 1;
+}
+
+message RoomDuration {
+  int32 room_id = 1;
+  google.type.Date start_date = 2;
+  optional google.type.Date end_date = 3;
+}
+
+message GetRoomDurationsRequest {
+  int32 patient_id = 1;
+}
+
+message GetRoomDurationsResponse {
+  repeated RoomDuration room_durations = 1;
+}
