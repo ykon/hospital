@@ -15,6 +15,9 @@ MyBatisはORMではないと言われるかもしれませんが、一応広い�
 
 ### 成果物:
 * API定義書: ```doc/index.html```
+* DB
+  * Windows: ```Get-Content .\src\sql\Hospital.sql | mysql -u root -pPASS```
+  * Other: ```mysql -u root -pPASS < ./src/sql/Hospital.sql```
 * アプリケーション起動: ```./gradlew bootrun```  
   ```
   grpcurl -import-path ./src/main/proto/ -proto Hospital.proto -plaintext -d '{"name": "test"}' localhost:6565 hospital.Hospital/CreatePatient
