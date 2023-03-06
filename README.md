@@ -17,7 +17,7 @@ MyBatisはORMではないと言われるかもしれませんが、一応広い�
 * API定義書: ```doc/index.html```
 * アプリケーション起動: ```./gradlew bootrun```  
   ```
-  grpcurl -import-path ./src/main/proto/ -proto Hospital.proto -    plaintext -d '{"name": "test"}' localhost:6565 hospital.Hospital/CreatePatient
+  grpcurl -import-path ./src/main/proto/ -proto Hospital.proto -plaintext -d '{"name": "test"}' localhost:6565 hospital.Hospital/CreatePatient
   ```
 * テストコード: ```src/test/java/com/example/hospital/HospitalTests.java```
 * テストコード起動: ```./gradlew test```
