@@ -5,7 +5,7 @@
 * API: gRPC
 * RDB: MySQL 8
 * ORM: MyBatis
-* Framework: Spring Boot 2.7
+* Framework: Spring Boot 3.0
 
 今回時間がなかったため、普段毎日使って慣れているものを選択しました。  
 本当はMySQL5.7系を普段使っているのですが、今回自前のPCにインストールが成功しないため仕方なく8系です。  
@@ -19,9 +19,6 @@ MyBatisはORMではないと言われるかもしれませんが、一応広い�
   * Windows: ```Get-Content .\src\sql\Hospital.sql | mysql -u root -pPASS```
   * Other: ```mysql -u root -pPASS < ./src/sql/Hospital.sql```
 * アプリケーション起動: ```./gradlew bootrun```  
-  ```
-  grpcurl -import-path ./src/main/proto/ -proto Hospital.proto -plaintext -d '{"name": "test"}' localhost:6565 hospital.Hospital/CreatePatient
-  ```
 * テストコード: ```src/test/java/com/example/hospital/HospitalTests.java```
 * テストコード起動: ```./gradlew test```
 
@@ -54,3 +51,108 @@ MyBatisはORMではないと言われるかもしれませんが、一応広い�
 * テストケースが足りていないため、まだまだ問題が隠れている可能性あり
 * debugログが埋め込まれていない (動作を追えるようにできていない)
 * 既に存在するレコードの確認ができていない (Duplicate entry)
+* 個別のID取得に対応できていない (全取得のみ対応)
+
+---
+
+### サンプル:
+```
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"name": "test"}' localhost:6565 hospital.Hospital/CreatePatient
+{
+  "id": 1
+}
+
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"number": "test1"}' localhost:6565 hospital.Hospital/CreateRoom
+{
+  "id": 1
+}
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"number": "test2"}' localhost:6565 hospital.Hospital/CreateRoom
+{
+  "id": 2
+}
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"number": "test3"}' localhost:6565 hospital.Hospital/CreateRoom
+{
+  "id": 3
+}
+
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"patient_id": 1, "room_id": 1, "start_date": {"year": 2023, "month": 3, "day":7}}' localhost:6565 hospital.Hospital/CreateAdmission
+{
+  "id": 1
+}
+
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"admission_id": 1, "from_room_id": 1, "to_room_id": 2, "move_date": {"year": 2023, "month": 3, "day":10}}' localhost:6565 hospital.Hospital/CreateRoomMove
+{
+  "id": 1
+}
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"admission_id": 1, "from_room_id": 2, "to_room_id": 3, "move_date": {"year": 2023, "month": 3, "day":15}}' localhost:6565 hospital.Hospital/CreateRoomMove
+{
+  "id": 2
+}
+
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"patient_id": 1}' localhost:6565 hospital.Hospital/GetAdmissions
+{
+  "admissions": [
+    {
+      "id": 1,   
+      "patientId": 1,
+      "startDate": {
+        "year": 2023,
+        "month": 3,
+        "day": 7
+      },
+      "updatedTime": "2023-03-07T01:22:04Z",
+      "createdTime": "2023-03-07T01:22:04Z"
+    }
+  ]
+}
+
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"id": 1, "end_date": {"year": 2023, "month": 3, "day": 20}, "updated_time": "2023-03-07T01:22:04Z"}' localhost:6565 hospital.Hospital/UpdateAdmission
+{
+
+}
+
+grpcurl -import-path .\src\main\proto\ -proto Hospital.proto -plaintext -d '{"patient_id": 1}' localhost:6565 hospital.Hospital/GetRoomDurations
+{
+  "roomDurations": [
+    {
+      "roomId": 1,
+      "startDate": {
+        "year": 2023,
+        "month": 3,
+        "day": 7
+      },
+      "endDate": {
+        "year": 2023,
+        "month": 3,
+        "day": 9
+      }
+    },
+    {
+      "roomId": 2,
+      "startDate": {
+        "year": 2023,
+        "month": 3,
+        "day": 11
+      },
+      "endDate": {
+        "year": 2023,
+        "month": 3,
+        "day": 14
+      }
+    },
+    {
+      "roomId": 3,
+      "startDate": {
+        "year": 2023,
+        "month": 3,
+        "day": 16
+      },
+      "endDate": {
+        "year": 2023,
+        "month": 3,
+        "day": 20
+      }
+    }
+  ]
+}
+```
