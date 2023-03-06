@@ -158,7 +158,7 @@ message Admission {
   int32 patient_id = 2;
   int32 room_id = 3;
   google.type.Date start_date = 4;
-  google.type.Date end_date = 5;
+  optional google.type.Date end_date = 5;
   google.protobuf.Timestamp updated_time = 6;
   google.protobuf.Timestamp created_time = 7;
 }

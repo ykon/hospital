@@ -4,10 +4,13 @@ import static com.example.hospital.util.MapUtils.asGrpcDate;
 import static com.example.hospital.util.MapUtils.asTimestamp;
 
 import com.example.hospital.grpc.Admission;
+import com.example.hospital.util.MapUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 
 @Getter
 @Setter
@@ -22,13 +25,15 @@ public class AdmissionVo implements Duration {
   private LocalDateTime createdAt;
 
   public Admission asAdmission() {
-    return Admission.newBuilder()
+    val builder = Admission.newBuilder()
         .setId(id)
         .setPatientId(patientId)
         .setStartDate(asGrpcDate(startDate))
-        .setEndDate(asGrpcDate(endDate))
         .setUpdatedTime(asTimestamp(updatedAt))
-        .setCreatedTime(asTimestamp(createdAt))
-        .build();
+        .setCreatedTime(asTimestamp(createdAt));
+
+    Optional.ofNullable(endDate).map(MapUtils::asGrpcDate).ifPresent(builder::setEndDate);
+
+    return builder.build();
   }
 }
