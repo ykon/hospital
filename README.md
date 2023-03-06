@@ -5,7 +5,7 @@
 * API: gRPC
 * RDB: MySQL 8
 * ORM: MyBatis
-* Framework: Spring Boot 
+* Framework: Spring Boot 3.0
 
 今回時間がなかったため、普段毎日使って慣れているものを選択しました。  
 本当はMySQL5.7系を普段使っているのですが、今回自前のPCにインストールが成功しないため仕方なく8系です。  
